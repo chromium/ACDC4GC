@@ -1,0 +1,97 @@
+// Copyright 2014 Google Inc. All rights reserved.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+ACDC for JavaScript (ACDC-JS)
+===================================
+
+Usage: 
+
+$ [your_vm] acdc.js
+
+runs the default settings of ACDC-JS.
+
+ACDC-JS can be configured through the following CLI parameters (default values are shown):
+
+timeQuantum: 1048576
+benchmarkDuration: 100
+minLiveness: 1
+maxLiveness: 10
+minSize: 8
+maxSize: 64
+minRootDistance: 1
+maxRootDistance: 20
+minOutDegree: 0
+maxOutDegree: 5
+minCycleSize: 1
+maxCycleSize: 20
+deallocationDelay: 0
+accessMemory: true
+readOnlyAccess: false
+listHeapRatio: -1
+logLevel: 4
+timer: 3
+cpuClock: 2000000
+
+
+Input description
+===================
+
+Example:
+$ [your_vm] acdc.js -- cpuClock 3000000 maxSize 128 maxLiveness 20
+
+Parameters in detail:
+
+timeQuantum: represents the number of bytes ACDC-JS allocates until it advances in time
+benchmarkDuration: number of timeQuanta that advance before termination
+minLiveness: min. object liveness. Given in timeQuanta
+maxLiveness: max. object liveness. Given in timeQuanta
+minSize: min. object size in bytes (approximately)
+maxSize: max. object size in bytes (approximately)
+minRootDistance: min. distance from allocated objects to roots
+maxRootDistance: max. distance from allocated objects to roots
+minOutDegree: min. number of outgoing references
+maxOutDegree: max. number of outgoing references
+minCycleSize: min. size of cycles in allocated objects
+maxCycleSize: max. size of cycles in allocated objects
+deallocationDelay: delays the deallocation of expired objects by a number of timeQuanta
+accessMemory: [0|1] if 1, live objects are accessed after each timeQuantum
+readOnlyAccess: [0|1] if 0, live objects are also modified upon access
+listHeapRatio: -1 or a percentage between 0 and 100. Controls the amount of list-based
+lifetime-size-classes over the amount of heap-based lifetime-size-classes
+logLevel: between 1 and 4.
+timer: controls time measurement method. Depends on VM.
+        1=performance.now(), 
+        2=PerfMeasurement(PerfMeasurement.CPU_CYCLES), requires setting cpuClock option
+        3=Date.now(), less accurate, but portable
+cpuClock: given in kHz. Required if timer==2
+
+
+Output description
+===================
+
+Example Output:
+
+> total runtime 5700
+> allocation avg 36.870 stddev 23.015 relative 62.421%
+> access avg 19.810 stddev 3.626 relative 18.302%
+
+total runtime (in ms): the whole ACDC-JS execution time.
+
+allocation (in ms): time spent allocating. Reports arithmetic mean (avg), 
+sample standard deviation (stddev), and coefficient of variation (relative)
+i.e., stddev/avg
+
+access (in ms): same as allocation, but reports time spent in accessing live objects
+
+
